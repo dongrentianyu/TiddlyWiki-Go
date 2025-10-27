@@ -1,0 +1,261 @@
+.wiki-card {
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  padding: 14px;
+  box-shadow: 0 1px 3px var(--card-shadow);
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.wiki-card:hover {
+  box-shadow: 0 2px 8px var(--card-shadow);
+  border-color: #667eea;
+}
+
+.wiki-card.running {
+  border-color: #10b981;
+  background: linear-gradient(
+    to right,
+    var(--bg-secondary) 0%,
+    rgba(16, 185, 129, 0.03) 100%
+  );
+}
+
+.wiki-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.wiki-title {
+  flex: 1;
+}
+
+.wiki-title h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.status-badge.running {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.stopped {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.wiki-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  padding: 4px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.btn-icon:hover {
+  opacity: 1;
+}
+
+.wiki-description {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.wiki-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.meta-label {
+  color: var(--text-muted);
+}
+
+.meta-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.category-badge {
+  background: #667eea;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  cursor: default;
+  transition: all 0.2s;
+}
+
+.category-badge.clickable {
+  cursor: pointer;
+}
+
+.category-badge.clickable:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.wiki-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  cursor: default;
+  transition: all 0.2s;
+}
+
+.tag.clickable {
+  cursor: pointer;
+}
+
+.tag.clickable:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+  transform: translateY(-1px);
+}
+
+.wiki-path {
+  background: var(--hover-bg);
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  word-break: break-all;
+  font-family: monospace;
+}
+
+.wiki-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.control-row-two .btn {
+  white-space: nowrap;
+}
+
+.control-row-full {
+  display: flex;
+  width: 100%;
+}
+
+.btn-full {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.wiki-controls .btn-sm {
+  padding: 8px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* List Mode Styles */
+.wiki-card.list-mode {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  padding: 12px 16px;
+}
+
+.wiki-card.list-mode .wiki-card-header {
+  grid-column: 1;
+  margin-bottom: 8px;
+}
+
+.wiki-card.list-mode .wiki-description {
+  grid-column: 1;
+  margin-bottom: 8px;
+}
+
+.wiki-card.list-mode .wiki-meta {
+  grid-column: 1;
+  margin-bottom: 8px;
+}
+
+.wiki-card.list-mode .wiki-tags {
+  grid-column: 1;
+  margin-bottom: 8px;
+}
+
+.wiki-card.list-mode .wiki-path {
+  grid-column: 1;
+  margin-bottom: 0;
+}
+
+.wiki-card.list-mode .wiki-controls {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 400px;
+}
+
+.wiki-card.list-mode .control-row-two {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.wiki-card.list-mode .wiki-controls .btn-sm {
+  width: 100%;
+  min-width: 90px;
+}

@@ -1,0 +1,35 @@
+.modal-small {
+  max-width: 500px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+.info-box {
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.info-box code {
+  display: block;
+  background: var(--bg-primary);
+  padding: 8px;
+  border-radius: 4px;
+  margin: 8px 0;
+  font-family: "Consolas", "Monaco", monospace;
+  color: var(--text-primary);
+}
+
+.info-box small {
+  color: var(--text-muted);
+}
+
