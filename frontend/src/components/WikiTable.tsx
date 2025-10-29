@@ -56,22 +56,29 @@ export function WikiTable({
       <table className="wiki-table">
         <thead>
           <tr>
-            <th onClick={() => handleSort("name")}>
+            <th
+              onClick={() => handleSort("name")}
+              className="col-name">
               名称 {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
             </th>
-            <th>状态</th>
-            <th onClick={() => handleSort("port")}>
+            <th className="col-status">状态</th>
+            <th
+              onClick={() => handleSort("port")}
+              className="col-port">
               端口 {sortBy === "port" && (sortOrder === "asc" ? "↑" : "↓")}
             </th>
-            <th onClick={() => handleSort("category")}>
+            <th
+              onClick={() => handleSort("category")}
+              className="col-category">
               分类 {sortBy === "category" && (sortOrder === "asc" ? "↑" : "↓")}
             </th>
-            <th>标签</th>
-            <th onClick={() => handleSort("path")}>
+            <th className="col-tags">标签</th>
+            <th
+              onClick={() => handleSort("path")}
+              className="col-path">
               路径 {sortBy === "path" && (sortOrder === "asc" ? "↑" : "↓")}
             </th>
-            <th>描述</th>
-            <th>操作</th>
+            <th className="col-actions">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -105,22 +112,12 @@ export function WikiTable({
                       className="btn-copy-path"
                       onClick={() => {
                         navigator.clipboard.writeText(wiki.path);
-                        alert("路径已复制到剪贴板！");
+                        alert("路径已复制！");
                       }}
                       title="复制路径">
                       📋
                     </button>
                   </div>
-                </td>
-                <td className="wiki-description">
-                  {wiki.description && wiki.description.length > 30 ? (
-                    <details className="description-details">
-                      <summary>{wiki.description.substring(0, 30)}...</summary>
-                      <div className="description-full">{wiki.description}</div>
-                    </details>
-                  ) : (
-                    wiki.description || "-"
-                  )}
                 </td>
                 <td className="wiki-actions">
                   <div className="actions-grid">

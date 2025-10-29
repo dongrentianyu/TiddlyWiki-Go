@@ -86,3 +86,16 @@
 .info-tips li:last-child {
   margin-bottom: 0;
 }
+
+.github-link {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.github-link:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}

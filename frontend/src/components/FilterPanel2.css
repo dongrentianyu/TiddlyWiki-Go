@@ -6,10 +6,15 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px var(--card-shadow);
   padding: 0;
+  height: calc(100vh - 220px);
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-panel2-container {
   padding: 30px;
+  flex: 1;
+  overflow: visible;
 }
 
 .filter-section {

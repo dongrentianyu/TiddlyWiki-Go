@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -92,11 +91,33 @@ func (s *ProcessService) Stop(id string) error {
 		return fmt.Errorf("wiki is not running")
 	}
 
-	LogInfo(fmt.Sprintf("Stopping wiki process (ID: %s)", id))
+	LogInfo(fmt.Sprintf("Stopping wiki process (ID: %s, PID: %d)", id, cmd.Process.Pid))
 	
-	if err := cmd.Process.Kill(); err != nil {
-		LogError("Failed to stop wiki", err)
-		return fmt.Errorf("failed to stop wiki: %w", err)
+	// On Windows, use taskkill to forcefully terminate the process tree
+	if runtime.GOOS == "windows" {
+		killCmd := exec.Command("taskkill", "/F", "/T", "/PID", fmt.Sprintf("%d", cmd.Process.Pid))
+		killCmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:    true,
+			CreationFlags: 0x08000000,
+		}
+		
+		output, err := killCmd.CombinedOutput()
+		if err != nil {
+			LogError(fmt.Sprintf("Taskkill failed: %s", string(output)), err)
+			// Fallback to Process.Kill()
+			if killErr := cmd.Process.Kill(); killErr != nil {
+				LogError("Process.Kill also failed", killErr)
+				return fmt.Errorf("failed to stop wiki: %w", killErr)
+			}
+		} else {
+			LogInfo(fmt.Sprintf("Taskkill output: %s", string(output)))
+		}
+	} else {
+		// On Unix-like systems, kill the process group
+		if err := cmd.Process.Kill(); err != nil {
+			LogError("Failed to kill process", err)
+			return fmt.Errorf("failed to stop wiki: %w", err)
+		}
 	}
 
 	delete(s.processes, id)
@@ -109,7 +130,16 @@ func (s *ProcessService) StopAll() {
 	defer s.mu.Unlock()
 
 	for id, cmd := range s.processes {
-		cmd.Process.Kill()
+		if runtime.GOOS == "windows" {
+			killCmd := exec.Command("taskkill", "/F", "/T", "/PID", fmt.Sprintf("%d", cmd.Process.Pid))
+			killCmd.SysProcAttr = &syscall.SysProcAttr{
+				HideWindow:    true,
+				CreationFlags: 0x08000000,
+			}
+			killCmd.Run()
+		} else {
+			cmd.Process.Kill()
+		}
 		delete(s.processes, id)
 	}
 }
@@ -253,31 +283,14 @@ func ExportWikiToHTML(wikiPath string) (string, error) {
 	newFileName := fmt.Sprintf("index-%s.html", timestamp)
 	newPath := filepath.Join(wikiPath, "output", newFileName)
 	
-	// Copy file with new name
-	if err := copyFile(originalPath, newPath); err != nil {
-		LogError("Failed to copy file with timestamp", err)
-		return originalPath, nil // Return original path if copy fails
+	// Rename file with timestamp (this will replace/delete the original)
+	if err := os.Rename(originalPath, newPath); err != nil {
+		LogError("Failed to rename file with timestamp", err)
+		return "", fmt.Errorf("重命名文件失败: %w", err)
 	}
 	
 	LogInfo(fmt.Sprintf("Successfully exported wiki to: %s", newPath))
 	return newPath, nil
 }
 
-// copyFile copies a file from src to dst
-func copyFile(src, dst string) error {
-	sourceFile, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer sourceFile.Close()
-	
-	destFile, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer destFile.Close()
-	
-	_, err = io.Copy(destFile, sourceFile)
-	return err
-}
 

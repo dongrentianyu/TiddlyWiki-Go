@@ -10,6 +10,36 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  table-layout: fixed;
+}
+
+/* Fixed column widths */
+.col-name {
+  width: 15%;
+}
+
+.col-status {
+  width: 8%;
+}
+
+.col-port {
+  width: 6%;
+}
+
+.col-category {
+  width: 10%;
+}
+
+.col-tags {
+  width: 12%;
+}
+
+.col-path {
+  width: 25%;
+}
+
+.col-actions {
+  width: 24%;
 }
 
 .wiki-table thead {
@@ -123,9 +153,10 @@
 
 .actions-grid {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
 }
 
 .description-details {

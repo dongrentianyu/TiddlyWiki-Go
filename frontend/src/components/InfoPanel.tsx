@@ -69,6 +69,20 @@ function InfoPanel({ wikis, onClose }: InfoPanelProps) {
         </div>
 
         <div className="info-section">
+          <h3>🔗 开源项目</h3>
+          <div className="info-item">
+            <span className="info-label">GitHub 仓库:</span>
+            <a
+              href="https://github.com/dongrentianyu/TiddlyWiki-Go"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-link">
+              dongrentianyu/TiddlyWiki-Go
+            </a>
+          </div>
+        </div>
+
+        <div className="info-section">
           <h3>💡 提示</h3>
           <ul className="info-tips">
             <li>点击侧边栏按钮可以展开/收起筛选面板</li>
