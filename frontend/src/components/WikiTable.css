@@ -118,10 +118,35 @@
 }
 
 .wiki-actions {
+  min-width: 160px;
+}
+
+.actions-grid {
   display: flex;
   gap: 4px;
+  flex-wrap: wrap;
   justify-content: flex-end;
-  min-width: 140px;
+}
+
+.description-details {
+  cursor: pointer;
+}
+
+.description-details summary {
+  cursor: pointer;
+  user-select: none;
+}
+
+.description-details summary:hover {
+  color: var(--text-primary);
+}
+
+.description-full {
+  margin-top: 8px;
+  padding: 8px;
+  background: var(--bg-primary);
+  border-radius: 4px;
+  white-space: pre-wrap;
 }
 
 .btn-table-action {

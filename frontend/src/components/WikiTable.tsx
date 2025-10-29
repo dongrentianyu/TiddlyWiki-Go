@@ -98,43 +98,54 @@ export function WikiTable({
                   title={wiki.path}>
                   {wiki.path.split(/[/\\]/).pop()}
                 </td>
-                <td className="wiki-description">{wiki.description || "-"}</td>
-                <td className="wiki-actions">
-                  {status === "stopped" ? (
-                    <button
-                      className="btn-table-action btn-start"
-                      onClick={() => onStart(wiki.id)}
-                      title="启动">
-                      ▶️
-                    </button>
+                <td className="wiki-description">
+                  {wiki.description && wiki.description.length > 30 ? (
+                    <details className="description-details">
+                      <summary>{wiki.description.substring(0, 30)}...</summary>
+                      <div className="description-full">{wiki.description}</div>
+                    </details>
                   ) : (
-                    <>
-                      <button
-                        className="btn-table-action btn-open"
-                        onClick={() => onOpenWiki(wiki)}
-                        title="打开">
-                        🔗
-                      </button>
-                      <button
-                        className="btn-table-action btn-stop"
-                        onClick={() => onStop(wiki.id)}
-                        title="停止">
-                        ⏹️
-                      </button>
-                    </>
+                    wiki.description || "-"
                   )}
-                  <button
-                    className="btn-table-action btn-edit"
-                    onClick={() => onEdit(wiki)}
-                    title="编辑">
-                    ✏️
-                  </button>
-                  <button
-                    className="btn-table-action btn-delete"
-                    onClick={() => onDelete(wiki.id)}
-                    title="删除">
-                    🗑️
-                  </button>
+                </td>
+                <td className="wiki-actions">
+                  <div className="actions-grid">
+                    {status === "stopped" ? (
+                      <button
+                        className="btn-table-action btn-start"
+                        onClick={() => onStart(wiki.id)}
+                        title="启动">
+                        ▶️
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          className="btn-table-action btn-open"
+                          onClick={() => onOpenWiki(wiki)}
+                          title="打开">
+                          🔗
+                        </button>
+                        <button
+                          className="btn-table-action btn-stop"
+                          onClick={() => onStop(wiki.id)}
+                          title="停止">
+                          ⏹️
+                        </button>
+                      </>
+                    )}
+                    <button
+                      className="btn-table-action btn-edit"
+                      onClick={() => onEdit(wiki)}
+                      title="编辑">
+                      ✏️
+                    </button>
+                    <button
+                      className="btn-table-action btn-delete"
+                      onClick={() => onDelete(wiki.id)}
+                      title="删除">
+                      🗑️
+                    </button>
+                  </div>
                 </td>
               </tr>
             );

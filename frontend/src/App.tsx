@@ -503,31 +503,27 @@ function App() {
           ) : null}
 
           {activeTab === "filter" && (
-            <div className="tab-content-wrapper">
-              <FilterPanel
-                allTags={allTags}
-                allCategories={allCategories}
-                selectedTags={selectedTags}
-                selectedCategory={selectedCategory}
-                searchQuery={searchQuery}
-                onTagsChange={setSelectedTags}
-                onCategoryChange={setSelectedCategory}
-                onSearchChange={setSearchQuery}
-                onClose={() => setActiveTab("wikis")}
-                onApply={() => setActiveTab("wikis")}
-                wikisWithoutCategory={wikisWithoutCategory}
-                wikisWithoutTags={wikisWithoutTags}
-              />
-            </div>
+            <FilterPanel
+              allTags={allTags}
+              allCategories={allCategories}
+              selectedTags={selectedTags}
+              selectedCategory={selectedCategory}
+              searchQuery={searchQuery}
+              onTagsChange={setSelectedTags}
+              onCategoryChange={setSelectedCategory}
+              onSearchChange={setSearchQuery}
+              onClose={() => setActiveTab("wikis")}
+              onApply={() => setActiveTab("wikis")}
+              wikisWithoutCategory={wikisWithoutCategory}
+              wikisWithoutTags={wikisWithoutTags}
+            />
           )}
 
           {activeTab === "info" && (
-            <div className="tab-content-wrapper">
-              <InfoPanel
-                wikis={wikis}
-                onClose={() => setActiveTab("wikis")}
-              />
-            </div>
+            <InfoPanel
+              wikis={wikis}
+              onClose={() => setActiveTab("wikis")}
+            />
           )}
         </div>
       </div>

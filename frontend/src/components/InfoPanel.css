@@ -1,9 +1,14 @@
 .info-panel {
-  max-width: 500px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px var(--card-shadow);
 }
 
 .info-content {
-  padding: 20px;
+  padding: 30px;
 }
 
 .info-section {
@@ -67,5 +72,3 @@
 .info-tips li:last-child {
   margin-bottom: 0;
 }
-
-
