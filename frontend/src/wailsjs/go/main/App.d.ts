@@ -21,7 +21,7 @@ export function GetAppVersion():Promise<string>;
 
 export function GetPlatform():Promise<string>;
 
-export function GetWikiStatus(arg1:string):Promise<string>;
+export function GetWikiStatus(arg1:string):Promise<boolean>;
 
 export function GetWikis():Promise<Array<models.Wiki>>;
 

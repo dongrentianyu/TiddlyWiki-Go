@@ -72,13 +72,15 @@ function InfoPanel({ wikis, onClose }: InfoPanelProps) {
           <h3>🔗 开源项目</h3>
           <div className="info-item">
             <span className="info-label">GitHub 仓库:</span>
-            <a
-              href="https://github.com/dongrentianyu/TiddlyWiki-Go"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="github-link">
+            <button
+              className="github-link"
+              onClick={() => {
+                // Open in system default browser using Wails BrowserOpenURL
+                const url = "https://github.com/dongrentianyu/TiddlyWiki-Go";
+                (window as any).runtime.BrowserOpenURL(url);
+              }}>
               dongrentianyu/TiddlyWiki-Go
-            </a>
+            </button>
           </div>
         </div>
 

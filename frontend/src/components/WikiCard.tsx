@@ -44,10 +44,11 @@ function WikiCard({
 
   const checkStatus = async () => {
     try {
-      const st = await GetWikiStatus(wiki.id);
-      setStatus(st as "running" | "stopped");
+      const isRunning = await GetWikiStatus(wiki.id);
+      setStatus(isRunning ? "running" : "stopped");
     } catch (error) {
       console.error("Failed to get status:", error);
+      setStatus("stopped");
     }
   };
 

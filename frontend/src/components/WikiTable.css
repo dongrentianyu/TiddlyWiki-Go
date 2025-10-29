@@ -39,7 +39,8 @@
 }
 
 .col-actions {
-  width: 24%;
+  width: 28%;
+  min-width: 280px;
 }
 
 .wiki-table thead {

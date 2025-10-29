@@ -101,9 +101,10 @@ func (a *App) RestartWiki(id string) error {
 	return a.wikiService.RestartWiki(id)
 }
 
-// GetWikiStatus gets the status of a wiki
-func (a *App) GetWikiStatus(id string) string {
-	return a.wikiService.GetStatus(id)
+// GetWikiStatus gets the status of a wiki (returns true if running)
+func (a *App) GetWikiStatus(id string) bool {
+	status := a.wikiService.GetStatus(id)
+	return status == "running"
 }
 
 // OpenFolder opens the wiki folder in file explorer
@@ -221,7 +222,7 @@ func (a *App) CreateNewWiki(parentDir string, wikiName string) (string, error) {
 
 // GetAppVersion returns the application version
 func (a *App) GetAppVersion() string {
-	return "2.9.0"
+	return "3.2.0"
 }
 
 // GetPlatform returns the platform information

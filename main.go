@@ -19,9 +19,11 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "TiddlyWiki Manager v2.3.0",
-		Width:  1200,
-		Height: 800,
+		Title:     "TiddlyWiki Manager",
+		Width:     1200,
+		Height:    800,
+		MinWidth:  800,
+		MinHeight: 600,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
@@ -31,10 +33,10 @@ func main() {
 		Bind: []interface{}{
 			app,
 		},
-		Frameless:       true,
-		StartHidden:     false,
-		DisableResize:   false,
-		Fullscreen:      false,
+		Frameless:     true,
+		StartHidden:   false,
+		DisableResize: false,
+		Fullscreen:    false,
 		Windows: &windows.Options{
 			WebviewIsTransparent: false,
 			WindowIsTranslucent:  false,

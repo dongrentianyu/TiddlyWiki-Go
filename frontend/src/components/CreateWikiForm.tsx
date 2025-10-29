@@ -12,18 +12,25 @@ function CreateWikiForm({ onClose, onSuccess }: CreateWikiFormProps) {
   const [wikiName, setWikiName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
-  const handleSelectFolder = async (e: React.MouseEvent) => {
+  const handleSelectFolder = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     try {
       const path = await SelectFolder();
+      console.log("Selected folder:", path);
       if (path && path.trim() !== "") {
         setParentDir(path);
+      } else {
+        console.log("User cancelled folder selection");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to select folder:", error);
-      // 不显示错误，用户取消选择是正常行为
+      // 用户取消选择是正常行为，不显示错误
+      // 只有在真正的错误时才提示
+      if (error && error.toString && !error.toString().includes("cancel")) {
+        console.warn("Folder selection error:", error);
+      }
     }
   };
 

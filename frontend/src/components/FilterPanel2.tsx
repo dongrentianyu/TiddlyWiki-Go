@@ -129,6 +129,13 @@ export default function FilterPanel2({
             )}
           </label>
           <div className="filter-tags-grid">
+            <button
+              className={`filter-tag-btn ${
+                localTags.includes("__NONE__") ? "active" : ""
+              }`}
+              onClick={() => toggleTag("__NONE__")}>
+              无标签
+            </button>
             {allTags.length > 0 ? (
               allTags.map((tag) => (
                 <button
@@ -141,7 +148,7 @@ export default function FilterPanel2({
                 </button>
               ))
             ) : (
-              <p className="filter-empty-hint">暂无标签</p>
+              <p className="filter-empty-hint">暂无其他标签</p>
             )}
           </div>
         </div>

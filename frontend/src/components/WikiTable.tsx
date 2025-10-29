@@ -1,6 +1,10 @@
 import { Wiki } from "../types/wiki";
-import { useState } from "react";
-import { ExportWikiToHTML, OpenFolder } from "../wailsjs/go/main/App";
+import { useState, useEffect } from "react";
+import {
+  ExportWikiToHTML,
+  OpenFolder,
+  GetWikiStatus,
+} from "../wailsjs/go/main/App";
 import "./WikiTable.css";
 
 interface WikiTableProps {
@@ -9,8 +13,9 @@ interface WikiTableProps {
   onDelete: (id: string) => void;
   onStart: (id: string) => void;
   onStop: (id: string) => void;
+  onRestart: (id: string) => void;
   onOpenWiki: (wiki: Wiki) => void;
-  getStatus: (id: string) => string;
+  onOpenInBrowser: (wiki: Wiki) => void;
 }
 
 export function WikiTable({
@@ -19,11 +24,34 @@ export function WikiTable({
   onDelete,
   onStart,
   onStop,
+  onRestart,
   onOpenWiki,
-  getStatus,
+  onOpenInBrowser,
 }: WikiTableProps) {
   const [sortBy, setSortBy] = useState<keyof Wiki>("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [wikiStatuses, setWikiStatuses] = useState<{ [key: string]: string }>(
+    {}
+  );
+
+  // Load wiki statuses
+  useEffect(() => {
+    const loadStatuses = async () => {
+      const statuses: { [key: string]: string } = {};
+      for (const wiki of wikis) {
+        try {
+          const isRunning = await GetWikiStatus(wiki.id);
+          statuses[wiki.id] = isRunning ? "running" : "stopped";
+        } catch (error) {
+          statuses[wiki.id] = "stopped";
+        }
+      }
+      setWikiStatuses(statuses);
+    };
+    loadStatuses();
+  }, [wikis]);
+
+  const getStatus = (id: string) => wikiStatuses[id] || "stopped";
 
   const handleSort = (key: keyof Wiki) => {
     if (sortBy === key) {
@@ -131,16 +159,28 @@ export function WikiTable({
                     ) : (
                       <>
                         <button
-                          className="btn-table-action btn-open"
-                          onClick={() => onOpenWiki(wiki)}
-                          title="打开">
-                          🔗
-                        </button>
-                        <button
                           className="btn-table-action btn-stop"
                           onClick={() => onStop(wiki.id)}
                           title="停止">
                           ⏹️
+                        </button>
+                        <button
+                          className="btn-table-action btn-restart"
+                          onClick={() => onRestart(wiki.id)}
+                          title="重启">
+                          🔄
+                        </button>
+                        <button
+                          className="btn-table-action btn-open-app"
+                          onClick={() => onOpenWiki(wiki)}
+                          title="应用内打开">
+                          📱
+                        </button>
+                        <button
+                          className="btn-table-action btn-open-browser"
+                          onClick={() => onOpenInBrowser(wiki)}
+                          title="浏览器打开">
+                          🌐
                         </button>
                       </>
                     )}

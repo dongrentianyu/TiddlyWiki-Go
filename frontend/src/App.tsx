@@ -483,10 +483,18 @@ function App() {
                   alert("停止失败：" + error);
                 }
               }}
+              onRestart={async (id) => {
+                try {
+                  await RestartWiki(id);
+                  await loadWikis();
+                } catch (error) {
+                  alert("重启失败：" + error);
+                }
+              }}
               onOpenWiki={handleOpenWiki}
-              getStatus={(id) => {
-                // 简单同步状态检查
-                return "stopped"; // 实际应该异步获取
+              onOpenInBrowser={(wiki) => {
+                const url = `http://127.0.0.1:${wiki.port}`;
+                window.open(url, "_blank");
               }}
             />
           ) : activeTab === "wikis" ? (
