@@ -52,11 +52,15 @@ function WikiForm({ wiki, onSubmit, onClose }: WikiFormProps) {
   const handleSelectFolder = async () => {
     try {
       const path = await SelectFolder();
-      if (path) {
+      if (path && path.trim() !== "") {
         setFormData({ ...formData, path });
       }
     } catch (error) {
       console.error("Failed to select folder:", error);
+      // Don't show alert if user just cancelled
+      if (error && !error.toString().includes("cancel")) {
+        alert("选择文件夹失败: " + error);
+      }
     }
   };
 

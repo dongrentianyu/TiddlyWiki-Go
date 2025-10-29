@@ -185,14 +185,14 @@ function App() {
 
     // Tag filter
     if (selectedTags.length > 0) {
-      if (selectedTags.includes("无标签")) {
+      if (selectedTags.includes("__NONE__")) {
         // Include wikis without tags
         const withoutTags = filtered.filter(
           (wiki) => !wiki.tags || wiki.tags.length === 0
         );
         const withTags = filtered.filter((wiki) =>
           selectedTags
-            .filter((tag) => tag !== "无标签")
+            .filter((tag) => tag !== "__NONE__")
             .every((tag) => wiki.tags.includes(tag))
         );
         filtered = [...new Set([...withoutTags, ...withTags])];
@@ -205,7 +205,7 @@ function App() {
 
     // Category filter
     if (selectedCategory) {
-      if (selectedCategory === "无分类") {
+      if (selectedCategory === "__NONE__") {
         filtered = filtered.filter(
           (wiki) => !wiki.category || wiki.category === ""
         );

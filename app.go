@@ -129,12 +129,31 @@ func (a *App) OpenInfoFile(path string) error {
 
 // SelectFolder opens a folder selection dialog
 func (a *App) SelectFolder() (string, error) {
+	defer func() {
+		if r := recover(); r != nil {
+			services.LogError("SelectFolder panic", fmt.Errorf("%v", r))
+		}
+	}()
+	
 	path, err := wruntime.OpenDirectoryDialog(a.ctx, wruntime.OpenDialogOptions{
 		Title: "选择 TiddlyWiki 文件夹",
 	})
+	
+	// If user canceled the dialog, return empty string without error
+	if err != nil && err.Error() == "User cancelled" {
+		return "", nil
+	}
+	
 	if err != nil {
+		services.LogError("Failed to open directory dialog", err)
 		return "", err
 	}
+	
+	if path == "" {
+		// User canceled or no selection made
+		return "", nil
+	}
+	
 	return path, nil
 }
 
@@ -222,7 +241,7 @@ func (a *App) CreateNewWiki(parentDir string, wikiName string) (string, error) {
 
 // GetAppVersion returns the application version
 func (a *App) GetAppVersion() string {
-	return "3.2.0"
+	return "3.3.0"
 }
 
 // GetPlatform returns the platform information
