@@ -11,6 +11,9 @@ interface WikiWindowProps {
   onFocus: () => void;
 }
 
+// DevTools state
+let devToolsEnabled = false;
+
 export const WikiWindow: React.FC<WikiWindowProps> = ({
   id,
   title,
@@ -21,6 +24,8 @@ export const WikiWindow: React.FC<WikiWindowProps> = ({
   onFocus,
 }) => {
   const [isMaximized, setIsMaximized] = useState(false);
+  const [showDevTools, setShowDevTools] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [position, setPosition] = useState({
     x: 100 + Math.random() * 200,
     y: 50 + Math.random() * 100,
@@ -105,6 +110,21 @@ export const WikiWindow: React.FC<WikiWindowProps> = ({
     onFocus();
   };
 
+  const handleDevTools = () => {
+    // Open browser devtools for the iframe content
+    // This will open the browser's developer tools
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      // Unfortunately, we can't programmatically open devtools
+      // But we can log a message to help users
+      console.log(
+        `To inspect wiki "${title}", right-click on the iframe and select "Inspect Element"`
+      );
+      alert(
+        '右键点击Wiki内容区域，选择"检查"打开开发者工具\n\nRight-click on the wiki content and select "Inspect" to open DevTools'
+      );
+    }
+  };
+
   const windowStyle: React.CSSProperties = isMaximized
     ? {
         top: 0,
@@ -133,6 +153,21 @@ export const WikiWindow: React.FC<WikiWindowProps> = ({
         onDoubleClick={handleMaximize}>
         <div className="window-title-text">{title}</div>
         <div className="window-controls">
+          <button
+            className="window-control-btn devtools"
+            onClick={handleDevTools}
+            title="开发者工具 / DevTools">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </button>
           <button
             className="window-control-btn minimize"
             onClick={onMinimize}
@@ -226,6 +261,7 @@ export const WikiWindow: React.FC<WikiWindowProps> = ({
       </div>
       <div className="wiki-window-content">
         <iframe
+          ref={iframeRef}
           src={url}
           title={title}
           className="wiki-iframe"
@@ -241,4 +277,3 @@ export const WikiWindow: React.FC<WikiWindowProps> = ({
     </div>
   );
 };
-

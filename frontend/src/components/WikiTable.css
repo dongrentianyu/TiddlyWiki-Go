@@ -1,0 +1,176 @@
+.wiki-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.wiki-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.wiki-table thead {
+  background: var(--bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.wiki-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.wiki-table th:hover {
+  background: var(--hover-bg);
+}
+
+.wiki-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s;
+}
+
+.wiki-table tbody tr:hover {
+  background: var(--hover-bg);
+}
+
+.wiki-table tbody tr.running {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.wiki-table tbody tr.running:hover {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.wiki-table td {
+  padding: 10px 16px;
+  color: var(--text-secondary);
+}
+
+.wiki-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 150px;
+}
+
+.wiki-status {
+  min-width: 100px;
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.running {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.stopped {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.wiki-port {
+  font-family: monospace;
+  min-width: 60px;
+}
+
+.wiki-category {
+  min-width: 80px;
+}
+
+.wiki-tags {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wiki-path {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.wiki-description {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wiki-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  min-width: 140px;
+}
+
+.btn-table-action {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-table-action:hover {
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+
+.btn-start:hover {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.btn-stop:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-open:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.btn-edit:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.btn-delete:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+/* 深色模式适配 */
+[data-theme="dark"] .status-badge.running {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+[data-theme="dark"] .status-badge.stopped {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}

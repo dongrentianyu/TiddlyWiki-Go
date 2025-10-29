@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import TitleBar from "./components/TitleBar";
 import WikiList from "./components/WikiList";
+import { WikiTable } from "./components/WikiTable";
 import WikiForm from "./components/WikiForm";
 import CreateWikiForm from "./components/CreateWikiForm";
 import FilterPanel from "./components/FilterPanel";
@@ -9,6 +10,7 @@ import InfoPanel from "./components/InfoPanel";
 import PortManager from "./components/PortManager";
 import { WikiWindow } from "./components/WikiWindow";
 import { Wiki } from "./types/wiki";
+import { useTranslation } from "./i18n/useTranslation";
 import {
   GetWikis,
   AddWiki,
@@ -42,10 +44,11 @@ interface OpenWindow {
 }
 
 type DisplayMode = "all" | "category" | "tag" | "path" | "recent";
-type ViewMode = "card" | "list";
+type ViewMode = "card" | "list" | "table";
 type TabMode = "wikis" | "filter" | "info";
 
 function App() {
+  const { language, toggleLanguage, t } = useTranslation();
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem("theme");
     return saved === "dark";
@@ -73,10 +76,6 @@ function App() {
   const [nextZIndex, setNextZIndex] = useState(1000);
   const [showSimpleFilter, setShowSimpleFilter] = useState(false);
   const [activeTab, setActiveTab] = useState<TabMode>("wikis");
-  const [language, setLanguage] = useState<"zh" | "en">(() => {
-    const saved = localStorage.getItem("language");
-    return (saved as "zh" | "en") || "zh";
-  });
 
   // 筛选记录保存
   const [filterHistory, setFilterHistory] = useState<
@@ -340,12 +339,6 @@ function App() {
     setIsDarkMode(!isDarkMode);
   };
 
-  const handleLanguageToggle = () => {
-    const newLang = language === "zh" ? "en" : "zh";
-    setLanguage(newLang);
-    localStorage.setItem("language", newLang);
-  };
-
   const wikisWithoutCategory = wikis.filter(
     (w) => !w.category || w.category === ""
   ).length;
@@ -358,19 +351,27 @@ function App() {
       <TitleBar
         onThemeToggle={handleThemeToggle}
         isDarkMode={isDarkMode}
-        onLanguageToggle={handleLanguageToggle}
+        onLanguageToggle={toggleLanguage}
         language={language}
       />
       <header className="app-header">
         <div className="header-left">
-          <h1>TiddlyWiki Manager</h1>
-          <span className="wiki-count">共 {filteredWikis.length} 个 Wiki</span>
+          <h1>{t("appName")}</h1>
+          <span className="wiki-count">
+            {t("wikiCount", { count: filteredWikis.length })}
+          </span>
           {portsInUse.filter((p) => p.inUse).length > 0 && (
             <span
               className="ports-warning"
               onClick={() => setShowPortManager(true)}
-              title="点击查看端口详情">
-              {portsInUse.filter((p) => p.inUse).length} 端口占用
+              title={
+                language === "zh"
+                  ? "点击查看端口详情"
+                  : "Click to view port details"
+              }>
+              {t("portsInUse", {
+                count: portsInUse.filter((p) => p.inUse).length,
+              })}
             </span>
           )}
         </div>
@@ -383,7 +384,7 @@ function App() {
                     viewMode === "card" ? "active" : ""
                   }`}
                   onClick={() => setViewMode("card")}
-                  title="卡片视图">
+                  title={t("cardView")}>
                   ▦
                 </button>
                 <button
@@ -391,31 +392,39 @@ function App() {
                     viewMode === "list" ? "active" : ""
                   }`}
                   onClick={() => setViewMode("list")}
-                  title="列表视图">
+                  title={t("listView")}>
                   ☰
+                </button>
+                <button
+                  className={`btn-view-mode ${
+                    viewMode === "table" ? "active" : ""
+                  }`}
+                  onClick={() => setViewMode("table")}
+                  title={t("tableView")}>
+                  ≡
                 </button>
               </div>
               <select
                 className="display-mode-select"
                 value={displayMode}
                 onChange={(e) => setDisplayMode(e.target.value as DisplayMode)}>
-                <option value="all">全部展示</option>
-                <option value="category">按分类</option>
-                <option value="tag">按标签</option>
-                <option value="path">按路径</option>
-                <option value="recent">最近启动</option>
+                <option value="all">{t("displayAll")}</option>
+                <option value="category">{t("displayByCategory")}</option>
+                <option value="tag">{t("displayByTag")}</option>
+                <option value="path">{t("displayByPath")}</option>
+                <option value="recent">{t("displayRecent")}</option>
               </select>
             </>
           )}
           <button
             className="btn btn-success"
             onClick={() => setShowCreateForm(true)}>
-            ✨ 新建
+            {t("newWiki")}
           </button>
           <button
             className="btn btn-primary"
             onClick={() => setShowForm(true)}>
-            ➕ 添加
+            {t("addWiki")}
           </button>
         </div>
       </header>
@@ -426,24 +435,51 @@ function App() {
           <button
             className={`tab-button ${activeTab === "wikis" ? "active" : ""}`}
             onClick={() => setActiveTab("wikis")}>
-            📚 Wiki 列表
+            {t("tabWikiList")}
           </button>
           <button
             className={`tab-button ${activeTab === "filter" ? "active" : ""}`}
             onClick={() => setActiveTab("filter")}>
-            🔍 筛选
+            {t("tabFilter")}
           </button>
           <button
             className={`tab-button ${activeTab === "info" ? "active" : ""}`}
             onClick={() => setActiveTab("info")}>
-            ℹ️ 信息
+            {t("tabInfo")}
           </button>
         </div>
       </div>
 
       <div className="app-content">
         <div className="main-content-full">
-          {activeTab === "wikis" && (
+          {activeTab === "wikis" && viewMode === "table" ? (
+            <WikiTable
+              wikis={filteredWikis}
+              onEdit={handleEditWiki}
+              onDelete={handleDeleteWiki}
+              onStart={async (id) => {
+                try {
+                  await StartWiki(id);
+                  await loadWikis();
+                } catch (error) {
+                  alert("启动失败：" + error);
+                }
+              }}
+              onStop={async (id) => {
+                try {
+                  await StopWiki(id);
+                  await loadWikis();
+                } catch (error) {
+                  alert("停止失败：" + error);
+                }
+              }}
+              onOpenWiki={handleOpenWiki}
+              getStatus={(id) => {
+                // 简单同步状态检查
+                return "stopped"; // 实际应该异步获取
+              }}
+            />
+          ) : activeTab === "wikis" ? (
             <WikiList
               wikis={filteredWikis}
               viewMode={viewMode}
@@ -464,7 +500,7 @@ function App() {
                 setActiveTab("filter");
               }}
             />
-          )}
+          ) : null}
 
           {activeTab === "filter" && (
             <div className="tab-content-wrapper">

@@ -23,6 +23,7 @@ export interface Translations {
   // View modes
   cardView: string;
   listView: string;
+  tableView: string;
 
   // Display modes
   displayAll: string;
@@ -96,6 +97,7 @@ export const translations: Record<Language, Translations> = {
     // View modes
     cardView: '卡片视图',
     listView: '列表视图',
+    tableView: '表格视图',
 
     // Display modes
     displayAll: '全部展示',
@@ -168,6 +170,7 @@ export const translations: Record<Language, Translations> = {
     // View modes
     cardView: 'Card View',
     listView: 'List View',
+    tableView: 'Table View',
 
     // Display modes
     displayAll: 'All',

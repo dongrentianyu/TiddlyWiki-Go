@@ -12,7 +12,7 @@
   },
   "nsisType": "multiple",
   "wailsjsdir": "./frontend/src",
-  "version": "2.4.0",
+  "version": "2.6.0",
   "assetdir": "./frontend/dist",
   "reloadonchange": true,
   "debounceMS": 750

@@ -122,7 +122,17 @@ function WikiCard({
   const handleExportHTML = async () => {
     try {
       const outputPath = await ExportWikiToHTML(wiki.id);
-      alert(`导出成功！\n文件保存在：${outputPath}`);
+      const shouldOpen = confirm(
+        `导出成功！\n文件保存在：${outputPath}\n\n是否打开文件夹？`
+      );
+
+      if (shouldOpen) {
+        const folderPath = outputPath.substring(
+          0,
+          outputPath.lastIndexOf(/[/\\]/.exec(outputPath)?.[0] || "/")
+        );
+        await OpenFolder(folderPath);
+      }
     } catch (error) {
       alert("导出失败：" + error);
     }
