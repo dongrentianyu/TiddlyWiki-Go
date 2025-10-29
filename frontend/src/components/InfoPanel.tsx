@@ -103,3 +103,4 @@ function InfoPanel({ wikis, onClose }: InfoPanelProps) {
 
 export default InfoPanel;
 
+

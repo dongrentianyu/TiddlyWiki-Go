@@ -27,6 +27,11 @@ function WikiList({
   onCategoryClick,
 }: WikiListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    const saved = localStorage.getItem("itemsPerPage");
+    return saved ? parseInt(saved) : 10;
+  });
 
   if (wikis.length === 0) {
     return (
@@ -255,11 +260,29 @@ function WikiList({
     );
   };
 
+  // 分页逻辑
+  const totalPages = Math.ceil(wikis.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedWikis = wikis.slice(startIndex, endIndex);
+
+  const handleItemsPerPageChange = (newValue: number) => {
+    setItemsPerPage(newValue);
+    setCurrentPage(1);
+    localStorage.setItem("itemsPerPage", newValue.toString());
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
+
   // 默认渲染
   const renderDefault = () => {
+    const displayWikis = totalPages > 1 ? paginatedWikis : wikis;
+
     return (
       <div className={viewMode === "card" ? "wiki-grid" : "wiki-list-view"}>
-        {wikis.map((wiki) => (
+        {displayWikis.map((wiki) => (
           <WikiCard
             key={wiki.id}
             wiki={wiki}
@@ -310,10 +333,54 @@ function WikiList({
             </button>
           </div>
         )}
+        {displayMode !== "category" &&
+          displayMode !== "tag" &&
+          wikis.length > 5 && (
+            <div className="pagination-controls">
+              <label className="items-per-page-label">
+                每页显示:
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) =>
+                    handleItemsPerPageChange(parseInt(e.target.value))
+                  }
+                  className="items-per-page-select">
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </label>
+            </div>
+          )}
       </div>
       {displayMode === "category" && renderByCategory()}
       {displayMode === "tag" && renderByTag()}
       {displayMode !== "category" && displayMode !== "tag" && renderDefault()}
+
+      {/* Pagination */}
+      {displayMode !== "category" &&
+        displayMode !== "tag" &&
+        totalPages > 1 && (
+          <div className="pagination">
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}>
+              上一页
+            </button>
+            <span className="pagination-info">
+              第 {currentPage} / {totalPages} 页 (共 {wikis.length} 项)
+            </span>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}>
+              下一页
+            </button>
+          </div>
+        )}
     </div>
   );
 }

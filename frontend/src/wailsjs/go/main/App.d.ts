@@ -11,6 +11,8 @@ export function CreateNewWiki(arg1:string,arg2:string):Promise<string>;
 
 export function DeleteWiki(arg1:string):Promise<void>;
 
+export function ExportWikiToHTML(arg1:string):Promise<string>;
+
 export function GetAllCategories():Promise<Array<string>>;
 
 export function GetAllTags():Promise<Array<string>>;

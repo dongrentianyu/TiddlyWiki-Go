@@ -3,6 +3,7 @@ export interface Wiki {
   name: string;
   path: string;
   port: number;
+  username: string;
   tags: string[];
   category: string;
   description: string;
@@ -14,6 +15,7 @@ export interface WikiFormData {
   name: string;
   path: string;
   port: number;
+  username: string;
   tags: string[];
   category: string;
   description: string;

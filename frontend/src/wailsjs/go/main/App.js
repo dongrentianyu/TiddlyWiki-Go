@@ -18,6 +18,10 @@ export function DeleteWiki(arg1) {
   return window['go']['main']['App']['DeleteWiki'](arg1);
 }
 
+export function ExportWikiToHTML(arg1) {
+  return window['go']['main']['App']['ExportWikiToHTML'](arg1);
+}
+
 export function GetAllCategories() {
   return window['go']['main']['App']['GetAllCategories']();
 }

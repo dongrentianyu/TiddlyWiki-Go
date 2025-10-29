@@ -185,6 +185,11 @@
   white-space: nowrap;
 }
 
+.control-row-single {
+  display: flex;
+  width: 100%;
+}
+
 .control-row-full {
   display: flex;
   width: 100%;
@@ -248,7 +253,8 @@
   min-width: 400px;
 }
 
-.wiki-card.list-mode .control-row-two {
+.wiki-card.list-mode .control-row-two,
+.wiki-card.list-mode .control-row-single {
   display: flex;
   flex-direction: column;
   gap: 6px;

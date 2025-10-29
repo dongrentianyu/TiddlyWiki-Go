@@ -15,6 +15,7 @@ function WikiForm({ wiki, onSubmit, onClose }: WikiFormProps) {
     name: "",
     path: "",
     port: 8080,
+    username: "",
     tags: [] as string[],
     category: "",
     description: "",
@@ -29,6 +30,7 @@ function WikiForm({ wiki, onSubmit, onClose }: WikiFormProps) {
         name: wiki.name,
         path: wiki.path,
         port: wiki.port,
+        username: wiki.username || "",
         tags: wiki.tags || [],
         category: wiki.category || "",
         description: wiki.description || "",
@@ -147,6 +149,27 @@ function WikiForm({ wiki, onSubmit, onClose }: WikiFormProps) {
               max="65535"
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label>用户名</label>
+            <input
+              type="text"
+              value={formData.username}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
+              placeholder="TiddlyWiki 登录用户名（可选）"
+            />
+            <small
+              style={{
+                color: "var(--text-muted)",
+                fontSize: "11px",
+                marginTop: "4px",
+                display: "block",
+              }}>
+              设置用户名后，访问 Wiki 需要身份验证
+            </small>
           </div>
 
           <div className="form-group">

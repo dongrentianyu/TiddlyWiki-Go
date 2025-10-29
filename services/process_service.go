@@ -40,8 +40,12 @@ func (s *ProcessService) Start(wiki *models.Wiki) error {
 	LogInfo(fmt.Sprintf("Starting wiki: %s on port %d", wiki.Name, wiki.Port))
 
 	// Start TiddlyWiki server
-	// Command: tiddlywiki . --listen port=<port> (run in wiki directory)
-	cmd := exec.Command("tiddlywiki", ".", "--listen", fmt.Sprintf("port=%d", wiki.Port))
+	// Command: tiddlywiki . --listen port=<port> [username=<username>]
+	args := []string{".", "--listen", fmt.Sprintf("port=%d", wiki.Port)}
+	if wiki.Username != "" {
+		args = append(args, fmt.Sprintf("username=%s", wiki.Username))
+	}
+	cmd := exec.Command("tiddlywiki", args...)
 	cmd.Dir = wiki.Path // Set working directory to wiki path
 	
 	// Hide console window on Windows
@@ -209,5 +213,40 @@ func CreateNewWiki(parentDir string, wikiName string) (string, error) {
 	
 	LogInfo(fmt.Sprintf("Successfully created wiki: %s at %s", wikiName, wikiPath))
 	return wikiPath, nil
+}
+
+// ExportWikiToHTML exports a TiddlyWiki to HTML file using --build index command
+func ExportWikiToHTML(wikiPath string) (string, error) {
+	LogInfo(fmt.Sprintf("Exporting wiki to HTML: %s", wikiPath))
+	
+	// Command: tiddlywiki . --build index (run in wiki directory)
+	cmd := exec.Command("tiddlywiki", ".", "--build", "index")
+	cmd.Dir = wikiPath
+	
+	// Hide console window on Windows
+	if runtime.GOOS == "windows" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:    true,
+			CreationFlags: 0x08000000, // CREATE_NO_WINDOW
+		}
+	}
+	
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		LogError(fmt.Sprintf("Failed to export wiki: %s", string(output)), err)
+		return "", fmt.Errorf("导出失败: %w\n输出: %s", err, string(output))
+	}
+	
+	// The output HTML file is usually in output/index.html
+	outputPath := filepath.Join(wikiPath, "output", "index.html")
+	
+	// Check if output file exists
+	if _, err := os.Stat(outputPath); os.IsNotExist(err) {
+		LogError("Output HTML file not found", err)
+		return "", fmt.Errorf("输出文件未找到: %s", outputPath)
+	}
+	
+	LogInfo(fmt.Sprintf("Successfully exported wiki to: %s", outputPath))
+	return outputPath, nil
 }
 

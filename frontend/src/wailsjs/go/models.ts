@@ -5,6 +5,7 @@ export namespace models {
 	    name: string;
 	    path: string;
 	    port: number;
+	    username: string;
 	    tags: string[];
 	    category: string;
 	    description: string;
@@ -23,6 +24,7 @@ export namespace models {
 	        this.name = source["name"];
 	        this.path = source["path"];
 	        this.port = source["port"];
+	        this.username = source["username"];
 	        this.tags = source["tags"];
 	        this.category = source["category"];
 	        this.description = source["description"];

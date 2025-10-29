@@ -251,3 +251,4 @@ Warning: go.mod is using Wails '2.8.0' but the CLI is 'v2.10.2'
 **下一版本**: v1.8.0（开发中）  
 **功能完整度**: 20% → 100%（v1.8.0 目标）
 
+

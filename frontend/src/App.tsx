@@ -43,6 +43,7 @@ interface OpenWindow {
 
 type DisplayMode = "all" | "category" | "tag" | "path" | "recent";
 type ViewMode = "card" | "list";
+type TabMode = "wikis" | "filter" | "info";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -71,6 +72,11 @@ function App() {
   const [openWindows, setOpenWindows] = useState<OpenWindow[]>([]);
   const [nextZIndex, setNextZIndex] = useState(1000);
   const [showSimpleFilter, setShowSimpleFilter] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabMode>("wikis");
+  const [language, setLanguage] = useState<"zh" | "en">(() => {
+    const saved = localStorage.getItem("language");
+    return (saved as "zh" | "en") || "zh";
+  });
 
   // 筛选记录保存
   const [filterHistory, setFilterHistory] = useState<
@@ -306,18 +312,12 @@ function App() {
     // 关闭窗口
     setOpenWindows((prev) => prev.filter((w) => w.id !== windowId));
 
-    // 询问是否停止Wiki服务器
-    const shouldStop = confirm(
-      "是否同时停止 Wiki 服务器？\n\n点击'确定'停止服务器\n点击'取消'仅关闭窗口，服务器继续运行"
-    );
-
-    if (shouldStop) {
-      try {
-        await StopWiki(wikiId);
-        await loadWikis();
-      } catch (error) {
-        console.error("Failed to stop wiki:", error);
-      }
+    // 自动停止Wiki服务器
+    try {
+      await StopWiki(wikiId);
+      await loadWikis();
+    } catch (error) {
+      console.error("Failed to stop wiki:", error);
     }
   };
 
@@ -340,6 +340,12 @@ function App() {
     setIsDarkMode(!isDarkMode);
   };
 
+  const handleLanguageToggle = () => {
+    const newLang = language === "zh" ? "en" : "zh";
+    setLanguage(newLang);
+    localStorage.setItem("language", newLang);
+  };
+
   const wikisWithoutCategory = wikis.filter(
     (w) => !w.category || w.category === ""
   ).length;
@@ -352,6 +358,8 @@ function App() {
       <TitleBar
         onThemeToggle={handleThemeToggle}
         isDarkMode={isDarkMode}
+        onLanguageToggle={handleLanguageToggle}
+        language={language}
       />
       <header className="app-header">
         <div className="header-left">
@@ -367,40 +375,38 @@ function App() {
           )}
         </div>
         <div className="header-actions">
-          <div className="view-mode-switch">
-            <button
-              className={`btn-view-mode ${viewMode === "card" ? "active" : ""}`}
-              onClick={() => setViewMode("card")}
-              title="卡片视图">
-              ▦
-            </button>
-            <button
-              className={`btn-view-mode ${viewMode === "list" ? "active" : ""}`}
-              onClick={() => setViewMode("list")}
-              title="列表视图">
-              ☰
-            </button>
-          </div>
-          <select
-            className="display-mode-select"
-            value={displayMode}
-            onChange={(e) => setDisplayMode(e.target.value as DisplayMode)}>
-            <option value="all">全部展示</option>
-            <option value="category">按分类</option>
-            <option value="tag">按标签</option>
-            <option value="path">按路径</option>
-            <option value="recent">最近启动</option>
-          </select>
-          <button
-            className="btn btn-filter"
-            onClick={() => setShowFilterPage(true)}>
-            🔍 筛选
-          </button>
-          <button
-            className="btn btn-info"
-            onClick={() => setShowInfo(true)}>
-            ℹ️ 信息
-          </button>
+          {activeTab === "wikis" && (
+            <>
+              <div className="view-mode-switch">
+                <button
+                  className={`btn-view-mode ${
+                    viewMode === "card" ? "active" : ""
+                  }`}
+                  onClick={() => setViewMode("card")}
+                  title="卡片视图">
+                  ▦
+                </button>
+                <button
+                  className={`btn-view-mode ${
+                    viewMode === "list" ? "active" : ""
+                  }`}
+                  onClick={() => setViewMode("list")}
+                  title="列表视图">
+                  ☰
+                </button>
+              </div>
+              <select
+                className="display-mode-select"
+                value={displayMode}
+                onChange={(e) => setDisplayMode(e.target.value as DisplayMode)}>
+                <option value="all">全部展示</option>
+                <option value="category">按分类</option>
+                <option value="tag">按标签</option>
+                <option value="path">按路径</option>
+                <option value="recent">最近启动</option>
+              </select>
+            </>
+          )}
           <button
             className="btn btn-success"
             onClick={() => setShowCreateForm(true)}>
@@ -414,28 +420,79 @@ function App() {
         </div>
       </header>
 
+      {/* Tabs Navigation */}
+      <div className="tabs-container">
+        <div className="tabs-nav">
+          <button
+            className={`tab-button ${activeTab === "wikis" ? "active" : ""}`}
+            onClick={() => setActiveTab("wikis")}>
+            📚 Wiki 列表
+          </button>
+          <button
+            className={`tab-button ${activeTab === "filter" ? "active" : ""}`}
+            onClick={() => setActiveTab("filter")}>
+            🔍 筛选
+          </button>
+          <button
+            className={`tab-button ${activeTab === "info" ? "active" : ""}`}
+            onClick={() => setActiveTab("info")}>
+            ℹ️ 信息
+          </button>
+        </div>
+      </div>
+
       <div className="app-content">
         <div className="main-content-full">
-          <WikiList
-            wikis={filteredWikis}
-            viewMode={viewMode}
-            displayMode={displayMode}
-            onEdit={handleEditWiki}
-            onDelete={handleDeleteWiki}
-            onOpenWiki={handleOpenWiki}
-            onReload={() => {
-              loadWikis();
-              checkPorts();
-            }}
-            onTagClick={(tag) => {
-              setSelectedTags([tag]);
-              setShowFilterPage(true);
-            }}
-            onCategoryClick={(category) => {
-              setSelectedCategory(category);
-              setShowFilterPage(true);
-            }}
-          />
+          {activeTab === "wikis" && (
+            <WikiList
+              wikis={filteredWikis}
+              viewMode={viewMode}
+              displayMode={displayMode}
+              onEdit={handleEditWiki}
+              onDelete={handleDeleteWiki}
+              onOpenWiki={handleOpenWiki}
+              onReload={() => {
+                loadWikis();
+                checkPorts();
+              }}
+              onTagClick={(tag) => {
+                setSelectedTags([tag]);
+                setActiveTab("filter");
+              }}
+              onCategoryClick={(category) => {
+                setSelectedCategory(category);
+                setActiveTab("filter");
+              }}
+            />
+          )}
+
+          {activeTab === "filter" && (
+            <div className="tab-content-wrapper">
+              <FilterPanel
+                allTags={allTags}
+                allCategories={allCategories}
+                selectedTags={selectedTags}
+                selectedCategory={selectedCategory}
+                searchQuery={searchQuery}
+                onTagsChange={setSelectedTags}
+                onCategoryChange={setSelectedCategory}
+                onSearchChange={setSearchQuery}
+                onClose={() => setActiveTab("wikis")}
+                onApply={() => setActiveTab("wikis")}
+                wikisWithoutCategory={wikisWithoutCategory}
+                wikisWithoutTags={wikisWithoutTags}
+              />
+            </div>
+          )}
+
+          {activeTab === "info" && (
+            <div className="tab-content-wrapper">
+              <InfoPanel
+                wikis={wikis}
+                onClose={() => setActiveTab("wikis")}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -454,48 +511,6 @@ function App() {
             loadWikis();
             checkPorts();
           }}
-        />
-      )}
-
-      {showInfo && (
-        <InfoPanel
-          wikis={wikis}
-          onClose={() => setShowInfo(false)}
-        />
-      )}
-
-      {showSimpleFilter && (
-        <SimpleFilterPanel
-          allTags={allTags}
-          allCategories={allCategories}
-          selectedTags={selectedTags}
-          selectedCategory={selectedCategory}
-          searchQuery={searchQuery}
-          onTagsChange={setSelectedTags}
-          onCategoryChange={setSelectedCategory}
-          onSearchChange={setSearchQuery}
-          onClose={() => setShowSimpleFilter(false)}
-          onSwitchToAdvanced={() => {
-            setShowSimpleFilter(false);
-            setShowFilterPage(true);
-          }}
-        />
-      )}
-
-      {showFilterPage && (
-        <FilterPanel
-          allTags={allTags}
-          allCategories={allCategories}
-          selectedTags={selectedTags}
-          selectedCategory={selectedCategory}
-          searchQuery={searchQuery}
-          onTagsChange={setSelectedTags}
-          onCategoryChange={setSelectedCategory}
-          onSearchChange={setSearchQuery}
-          onClose={() => setShowFilterPage(false)}
-          onApply={() => setShowFilterPage(false)}
-          wikisWithoutCategory={wikisWithoutCategory}
-          wikisWithoutTags={wikisWithoutTags}
         />
       )}
 

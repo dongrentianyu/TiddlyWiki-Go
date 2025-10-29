@@ -132,3 +132,4 @@ export const SimpleFilterPanel: React.FC<SimpleFilterPanelProps> = ({
     </div>
   );
 };
+

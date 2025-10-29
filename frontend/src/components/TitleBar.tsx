@@ -9,9 +9,16 @@ import "./TitleBar.css";
 interface TitleBarProps {
   onThemeToggle: () => void;
   isDarkMode: boolean;
+  onLanguageToggle?: () => void;
+  language?: "zh" | "en";
 }
 
-function TitleBar({ onThemeToggle, isDarkMode }: TitleBarProps) {
+function TitleBar({
+  onThemeToggle,
+  isDarkMode,
+  onLanguageToggle,
+  language = "zh",
+}: TitleBarProps) {
   const handleMinimize = async () => {
     try {
       await WindowMinimize();
@@ -46,6 +53,15 @@ function TitleBar({ onThemeToggle, isDarkMode }: TitleBarProps) {
       </div>
 
       <div className="title-bar-right">
+        {onLanguageToggle && (
+          <button
+            className="language-toggle-btn"
+            onClick={onLanguageToggle}
+            title={language === "zh" ? "Switch to English" : "切换到中文"}
+            data-wails-no-drag>
+            {language === "zh" ? "EN" : "中"}
+          </button>
+        )}
         <button
           className="theme-toggle-btn"
           onClick={onThemeToggle}
@@ -80,4 +96,3 @@ function TitleBar({ onThemeToggle, isDarkMode }: TitleBarProps) {
 }
 
 export default TitleBar;
-

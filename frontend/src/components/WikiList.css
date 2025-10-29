@@ -24,7 +24,7 @@
 .wiki-list-view {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px; /* 减少间距 */
 }
 
 .wiki-list-empty {
@@ -122,4 +122,61 @@
 .wiki-group[open] > div {
   padding: 16px;
   border-top: 1px solid var(--border-color);
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: var(--text-secondary);
+  min-width: 150px;
+  text-align: center;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.items-per-page-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.items-per-page-select {
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+
+.items-per-page-select:hover {
+  border-color: #667eea;
+}
+
+.items-per-page-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
 }

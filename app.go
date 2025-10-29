@@ -221,7 +221,7 @@ func (a *App) CreateNewWiki(parentDir string, wikiName string) (string, error) {
 
 // GetAppVersion returns the application version
 func (a *App) GetAppVersion() string {
-	return "2.3.0"
+	return "2.4.0"
 }
 
 // GetPlatform returns the platform information
@@ -243,5 +243,21 @@ func (a *App) CheckPortsStatus() []services.PortInfo {
 func (a *App) KillPortProcess(port int) error {
 	services.LogInfo(fmt.Sprintf("Attempting to kill process on port %d", port))
 	return services.KillProcessOnPort(port)
+}
+
+// ExportWikiToHTML exports a wiki to HTML file
+func (a *App) ExportWikiToHTML(id string) (string, error) {
+	wiki, err := a.wikiService.GetByID(id)
+	if err != nil {
+		return "", err
+	}
+	
+	outputPath, err := services.ExportWikiToHTML(wiki.Path)
+	if err != nil {
+		return "", err
+	}
+	
+	services.LogInfo(fmt.Sprintf("Wiki exported successfully: %s", outputPath))
+	return outputPath, nil
 }
 

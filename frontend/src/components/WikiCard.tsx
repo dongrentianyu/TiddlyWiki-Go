@@ -10,6 +10,7 @@ import {
   OpenGitHubDesktop,
   OpenInfoFile,
   OpenWikiInNewWindow,
+  ExportWikiToHTML,
 } from "../wailsjs/go/main/App";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 import "./WikiCard.css";
@@ -115,6 +116,15 @@ function WikiCard({
       await OpenInfoFile(wiki.path);
     } catch (error) {
       alert("打开 info 文件失败：" + error);
+    }
+  };
+
+  const handleExportHTML = async () => {
+    try {
+      const outputPath = await ExportWikiToHTML(wiki.id);
+      alert(`导出成功！\n文件保存在：${outputPath}`);
+    } catch (error) {
+      alert("导出失败：" + error);
     }
   };
 
@@ -295,6 +305,15 @@ function WikiCard({
             className="btn btn-secondary btn-sm"
             onClick={handleOpenInfo}>
             📄 Info 文件
+          </button>
+        </div>
+
+        {/* 导出按钮 */}
+        <div className="control-row-single">
+          <button
+            className="btn btn-info btn-sm btn-full"
+            onClick={handleExportHTML}>
+            📦 导出 HTML
           </button>
         </div>
       </div>

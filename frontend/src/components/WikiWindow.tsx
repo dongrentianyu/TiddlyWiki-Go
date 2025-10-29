@@ -241,3 +241,4 @@ export const WikiWindow: React.FC<WikiWindowProps> = ({
     </div>
   );
 };
+

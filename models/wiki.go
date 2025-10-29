@@ -10,6 +10,7 @@ type Wiki struct {
 	Name        string    `json:"name"`
 	Path        string    `json:"path"`
 	Port        int       `json:"port"`
+	Username    string    `json:"username"`    // Username for TiddlyWiki authentication
 	Tags        []string  `json:"tags"`
 	Category    string    `json:"category"`
 	Description string    `json:"description"`
