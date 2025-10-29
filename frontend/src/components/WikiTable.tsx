@@ -1,5 +1,6 @@
 import { Wiki } from "../types/wiki";
 import { useState } from "react";
+import { ExportWikiToHTML, OpenFolder } from "../wailsjs/go/main/App";
 import "./WikiTable.css";
 
 interface WikiTableProps {
@@ -93,10 +94,23 @@ export function WikiTable({
                     ? wiki.tags.join(", ")
                     : "-"}
                 </td>
-                <td
-                  className="wiki-path"
-                  title={wiki.path}>
-                  {wiki.path.split(/[/\\]/).pop()}
+                <td className="wiki-path">
+                  <div className="path-container">
+                    <span
+                      className="path-text"
+                      title={wiki.path}>
+                      {wiki.path}
+                    </span>
+                    <button
+                      className="btn-copy-path"
+                      onClick={() => {
+                        navigator.clipboard.writeText(wiki.path);
+                        alert("路径已复制到剪贴板！");
+                      }}
+                      title="复制路径">
+                      📋
+                    </button>
+                  </div>
                 </td>
                 <td className="wiki-description">
                   {wiki.description && wiki.description.length > 30 ? (
@@ -138,6 +152,36 @@ export function WikiTable({
                       onClick={() => onEdit(wiki)}
                       title="编辑">
                       ✏️
+                    </button>
+                    <button
+                      className="btn-table-action btn-export"
+                      onClick={async () => {
+                        try {
+                          const outputPath = await ExportWikiToHTML(wiki.id);
+                          const shouldOpen = confirm(
+                            `导出成功！\n文件保存在：${outputPath}\n\n是否打开文件夹？`
+                          );
+                          if (shouldOpen) {
+                            const folderPath = outputPath.substring(
+                              0,
+                              outputPath.lastIndexOf(
+                                /[/\\]/.exec(outputPath)?.[0] || "/"
+                              )
+                            );
+                            await OpenFolder(folderPath);
+                          }
+                        } catch (error) {
+                          alert("导出失败：" + error);
+                        }
+                      }}
+                      title="导出HTML">
+                      📄
+                    </button>
+                    <button
+                      className="btn-table-action btn-folder"
+                      onClick={() => OpenFolder(wiki.path)}
+                      title="打开文件夹">
+                      📁
                     </button>
                     <button
                       className="btn-table-action btn-delete"

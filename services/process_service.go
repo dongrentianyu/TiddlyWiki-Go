@@ -2,12 +2,14 @@ package services
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sync"
 	"syscall"
+	"time"
 	"tiddlywiki-manager/models"
 )
 
@@ -238,15 +240,44 @@ func ExportWikiToHTML(wikiPath string) (string, error) {
 	}
 	
 	// The output HTML file is usually in output/index.html
-	outputPath := filepath.Join(wikiPath, "output", "index.html")
+	originalPath := filepath.Join(wikiPath, "output", "index.html")
 	
 	// Check if output file exists
-	if _, err := os.Stat(outputPath); os.IsNotExist(err) {
+	if _, err := os.Stat(originalPath); os.IsNotExist(err) {
 		LogError("Output HTML file not found", err)
-		return "", fmt.Errorf("输出文件未找到: %s", outputPath)
+		return "", fmt.Errorf("输出文件未找到: %s", originalPath)
 	}
 	
-	LogInfo(fmt.Sprintf("Successfully exported wiki to: %s", outputPath))
-	return outputPath, nil
+	// Add timestamp to filename
+	timestamp := time.Now().Format("2006-01-02-15_04")
+	newFileName := fmt.Sprintf("index-%s.html", timestamp)
+	newPath := filepath.Join(wikiPath, "output", newFileName)
+	
+	// Copy file with new name
+	if err := copyFile(originalPath, newPath); err != nil {
+		LogError("Failed to copy file with timestamp", err)
+		return originalPath, nil // Return original path if copy fails
+	}
+	
+	LogInfo(fmt.Sprintf("Successfully exported wiki to: %s", newPath))
+	return newPath, nil
+}
+
+// copyFile copies a file from src to dst
+func copyFile(src, dst string) error {
+	sourceFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+	
+	destFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+	
+	_, err = io.Copy(destFile, sourceFile)
+	return err
 }
 

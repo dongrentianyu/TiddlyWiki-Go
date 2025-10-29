@@ -221,7 +221,7 @@ func (a *App) CreateNewWiki(parentDir string, wikiName string) (string, error) {
 
 // GetAppVersion returns the application version
 func (a *App) GetAppVersion() string {
-	return "2.6.0"
+	return "2.7.0"
 }
 
 // GetPlatform returns the platform information

@@ -4,7 +4,7 @@ import WikiList from "./components/WikiList";
 import { WikiTable } from "./components/WikiTable";
 import WikiForm from "./components/WikiForm";
 import CreateWikiForm from "./components/CreateWikiForm";
-import FilterPanel from "./components/FilterPanel";
+import FilterPanel2 from "./components/FilterPanel2";
 import { SimpleFilterPanel } from "./components/SimpleFilterPanel";
 import InfoPanel from "./components/InfoPanel";
 import PortManager from "./components/PortManager";
@@ -315,8 +315,18 @@ function App() {
     try {
       await StopWiki(wikiId);
       await loadWikis();
+
+      // 检查端口并清理
+      await checkPorts();
+
+      // 显示通知
+      const wiki = wikis.find((w) => w.id === wikiId);
+      if (wiki) {
+        alert(`✅ Wiki "${wiki.name}" 已停止\n端口 ${wiki.port} 已释放`);
+      }
     } catch (error) {
       console.error("Failed to stop wiki:", error);
+      alert("停止Wiki时出现错误，请手动检查进程");
     }
   };
 
@@ -503,7 +513,7 @@ function App() {
           ) : null}
 
           {activeTab === "filter" && (
-            <FilterPanel
+            <FilterPanel2
               allTags={allTags}
               allCategories={allCategories}
               selectedTags={selectedTags}
