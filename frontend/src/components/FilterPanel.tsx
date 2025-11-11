@@ -1,4 +1,5 @@
 import "./FilterPanel.css";
+import React from "react";
 
 interface FilterPanelProps {
   allTags: string[];
