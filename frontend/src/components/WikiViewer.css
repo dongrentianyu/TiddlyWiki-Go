@@ -12,6 +12,14 @@
   padding: 20px;
 }
 
+.no-draggable {
+  --wails-draggable: no-drag;
+}
+
+.draggable {
+  --wails-draggable: drag;
+}
+
 .wiki-viewer-container {
   background: var(--bg-secondary);
   border-radius: 8px;

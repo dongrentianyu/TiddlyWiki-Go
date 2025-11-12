@@ -44,9 +44,7 @@ function TitleBar({
   };
 
   return (
-    <div
-      className="title-bar"
-      data-wails-drag>
+    <div className="title-bar draggable">
       <div className="title-bar-left">
         <div className="app-icon">🌟</div>
         <div className="app-title">TiddlyWiki Manager</div>
@@ -55,39 +53,39 @@ function TitleBar({
       <div className="title-bar-right">
         {onLanguageToggle && (
           <button
-            className="language-toggle-btn"
+            className="language-toggle-btn no-draggable"
             onClick={onLanguageToggle}
             title={language === "zh" ? "Switch to English" : "切换到中文"}
-            data-wails-no-drag>
+          >
             {language === "zh" ? "EN" : "中"}
           </button>
         )}
         <button
-          className="theme-toggle-btn"
+          className="theme-toggle-btn no-draggable"
           onClick={onThemeToggle}
           title={isDarkMode ? "切换到白天模式" : "切换到黑夜模式"}
-          data-wails-no-drag>
+        >
           {isDarkMode ? "☀️" : "🌙"}
         </button>
         <button
-          className="window-btn minimize-btn"
+          className="window-btn minimize-btn no-draggable"
           onClick={handleMinimize}
           title="最小化"
-          data-wails-no-drag>
+        >
           −
         </button>
         <button
-          className="window-btn maximize-btn"
+          className="window-btn maximize-btn no-draggable"
           onClick={handleMaximize}
           title="最大化"
-          data-wails-no-drag>
+        >
           □
         </button>
         <button
-          className="window-btn close-btn"
+          className="window-btn close-btn no-draggable"
           onClick={handleClose}
           title="关闭"
-          data-wails-no-drag>
+        >
           ✕
         </button>
       </div>

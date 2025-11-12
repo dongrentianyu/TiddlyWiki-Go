@@ -39,52 +39,46 @@ function WikiViewer({ url, name, path, onClose }: WikiViewerProps) {
       <div
         className={`wiki-viewer-container ${
           isMinimized ? "minimized" : isMaximized ? "maximized" : "normal"
-        }`}>
-        <div
-          className="wiki-viewer-header"
-          data-wails-drag>
+        }`}
+      >
+        <div className="wiki-viewer-header draggable">
           <div className="wiki-viewer-title">
             <span>📁</span>
             <span>{folderName}</span>
             <span className="wiki-url-small">{url}</span>
           </div>
-          <div className="wiki-viewer-controls">
+          <div className="wiki-viewer-controls no-draggable">
             <button
               className="btn-viewer-control"
               onClick={handleMinimize}
               title="最小化"
-              data-wails-no-drag>
+            >
               —
             </button>
             <button
-              className="btn-viewer-control"
+              className="btn-viewer-control no-draggable"
               onClick={handleMaximize}
               title={isMaximized ? "还原" : "最大化"}
-              data-wails-no-drag>
+            >
               {isMaximized ? "❐" : "□"}
             </button>
             <button
-              className="btn-viewer-close"
+              className="btn-viewer-close no-draggable"
               onClick={onClose}
               title="关闭"
-              data-wails-no-drag>
+            >
               ✕
             </button>
           </div>
         </div>
         {!isMinimized && (
           <div className="wiki-viewer-content">
-            <iframe
-              src={url}
-              title={name}
-            />
+            <iframe src={url} title={name} />
           </div>
         )}
       </div>
       {isMinimized && (
-        <div
-          className="wiki-viewer-taskbar"
-          onClick={handleRestore}>
+        <div className="wiki-viewer-taskbar" onClick={handleRestore}>
           <span>📁</span>
           <span>{folderName}</span>
           <span className="taskbar-url">{url}</span>

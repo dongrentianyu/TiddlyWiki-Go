@@ -9,6 +9,14 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.no-draggable {
+  --wails-draggable: no-drag;
+}
+
+.draggable {
+  --wails-draggable: drag;
+}
+
 .title-bar-left {
   display: flex;
   align-items: center;
