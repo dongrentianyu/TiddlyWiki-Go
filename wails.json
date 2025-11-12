@@ -6,14 +6,15 @@
   "frontend:build": "pnpm run build",
   "frontend:dev:watcher": "pnpm run dev",
   "frontend:dev:serverUrl": "auto",
-  "author": {
-    "name": "TiddlyWiki Manager",
-    "email": "user@example.com"
-  },
   "nsisType": "multiple",
   "wailsjsdir": "./frontend/src",
-  "version": "3.2.0",
   "assetdir": "./frontend/dist",
   "reloadonchange": true,
-  "debounceMS": 750
+  "debounceMS": 750,
+  "info": {
+    "productName": "TiddlyWiki Manager",
+    "productVersion": "3.2.0",
+    "copyright": "MIT",
+    "comments": "一个现代化的 TiddlyWiki 管理工具，让你的知识管理更高效"
+  }
 }
